@@ -1,7 +1,7 @@
-const { token } = require("morgan");
 const userModel = require("../models/userModel");
 const bcrypt = require('bcryptjs');
 const generateTokenAndSetCookie = require("../utils/generateTokenAndSetCookie");
+const { sendVerificationEmail, sendWelcomeEmail } = require("../mail/email");
 
 // User Signup Controller
 const userSignupController = async (req, res) => {
@@ -46,12 +46,16 @@ const userSignupController = async (req, res) => {
         // JsonWebToken
         generateTokenAndSetCookie(res, user._id);
 
+        // send message to email
+        await sendVerificationEmail(user.email, verificationToken);
+
         res.status(201).json({
             success: true,
             message: "User Created Successfully",
             user: {
                 ...user._doc,
-                password: undefined
+                password: undefined,
+                // verificationToken: undefined
             }
         });
 
@@ -65,12 +69,57 @@ const userSignupController = async (req, res) => {
     }
 };
 
+const verifyEmailController = async (req, res) => {
+    const { code } = req.body;
+    try {
+
+        // check user by verification token number
+        const user = await userModel.findOne({
+            verificationToken: code,
+            verificationTokenExpiresAt: { $gt: Date.now() }
+        })
+
+        // validation of user
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or Expired Verification Code"
+            })
+        }
+
+        user.isVerified = true;                        // change isverified status
+        user.verificationToken = undefined;            // hide verification token
+        user.verificationTokenExpiresAt = undefined;   // hide verification token expire at
+
+        // save user data in database
+        await user.save();
+
+        // send welcome email by user after verify successfully
+        await sendWelcomeEmail(user.email, user.name);
+
+        res.status(200).json({
+            success: true,
+            message: "Verify Email Successfully",
+            user: {
+                ...user._doc,
+                password: undefined
+            }
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Error in verify Email Api",
+            error
+        })
+    }
+};
 
 // User Signup Controller
 const userLoginController = async (req, res) => {
 
 };
-
 
 // User Signup Controller
 const userLogoutController = async (req, res) => {
@@ -78,4 +127,4 @@ const userLogoutController = async (req, res) => {
 };
 
 
-module.exports = { userSignupController, userLoginController, userLogoutController };
+module.exports = { userSignupController, verifyEmailController, userLoginController, userLogoutController };
