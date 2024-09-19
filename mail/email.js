@@ -1,5 +1,3 @@
-const Nodemailer = require("nodemailer");
-const { MailtrapTransport } = require("mailtrap")
 const { VERIFICATION_EMAIL_TEMPLATE } = require("./emailTemplate");
 const { transport, sender } = require("./mailtrap");
 

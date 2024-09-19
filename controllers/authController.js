@@ -118,12 +118,54 @@ const verifyEmailController = async (req, res) => {
 
 // User Signup Controller
 const userLoginController = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        // check email of user
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Credentials"
+            });
+        }
+        // campare password to database 
+        const isPassword = await bcrypt.compare(password, user.password);
+        if (!isPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Credentials"
+            });
+        }
+        generateTokenAndSetCookie(res, user._id);
+        user.lastLogin = new Date();
+        await user.save();
 
+        res.status(200).json({
+            success: true,
+            message: "User login Successfully",
+            user: {
+                ...user._doc,
+                password: undefined,
+            }
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: true,
+            message: " Error in Login API",
+            error
+        })
+    }
 };
 
 // User Signup Controller
 const userLogoutController = async (req, res) => {
-
+    res.clearCookie("token");
+    res.status(200).json({
+        success: true,
+        message: `User Logout Successfully`
+    });
 };
 
 

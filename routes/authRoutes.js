@@ -10,10 +10,10 @@ router.post("/signup", userSignupController);
 // User Verification Email || POST
 router.post("/verify-email", verifyEmailController);
 
-// User Login ||
-router.get("/login", userLoginController);
+// User Login || POST
+router.post("/login", userLoginController);
 
-// User Logout ||
+// User Logout || GET
 router.get("/logout", userLogoutController);
 
 module.exports = router;
