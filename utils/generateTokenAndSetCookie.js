@@ -5,7 +5,7 @@ const generateTokenAndSetCookie = (res, userID) => {
         expiresIn: '7d'
     });
 
-    res.cookie('token ', token, {
+    res.cookie("token", token, {
         httpOnly: true, // prevent xss Attacks
         secure: process.env.NODE_ENV === "Production",
         sameSite: 'strict', // prevent csrf Attacks

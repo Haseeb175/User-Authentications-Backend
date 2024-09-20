@@ -2,6 +2,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 // Import Files/Functions
 const connectDB = require('./config/db');
@@ -18,6 +19,7 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cookieParser());
 
 // Testing
 app.get('/', (req, res) => {
