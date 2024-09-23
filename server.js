@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 // Testing
 app.get('/', (req, res) => {
-    res.send("<h1> Hello World! <h1>");
+    res.send("<h1> Hello Haseeb.. This is runnung in docker! <h1>");
 });
 
 app.use("/api/auth", authRoutes);

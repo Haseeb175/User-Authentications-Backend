@@ -1,0 +1,46 @@
+
+// Create User
+POST  http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+    "name": "Haseeb Ahmed",
+    "email": "mrhaseeb@gmail.com",
+    "password":"123"
+}
+
+// Verify Email
+POST http://localhost:3000/api/auth/verify-email
+
+# {
+#     "code":""
+# }
+
+// Login User
+POST  http://localhost:3000/api/auth/login
+
+# {
+#     "email": "mrhaseeb@gmail.com",
+#     "password":"123"
+# }
+
+// Logout User
+GET http://localhost:3000/api/auth/logout
+
+
+// Forget Password
+POST http://localhost:3000/api/auth/forget-password
+
+# {
+#     "email": "mrhaseeb2@gmail.com"
+# }
+
+// Reset Password
+POST http://localhost:3000/api/auth/reset-password/62b967dd3969cf00102de7d3f4e710f249216ad0
+
+# {
+#     "password": "123"
+# }
+
+// Check User
+GET http://localhost:3000/api/auth/check-auth
