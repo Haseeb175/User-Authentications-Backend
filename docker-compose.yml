@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  db:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: Haseeb-Ahmed
+      MONGO_INITDB_ROOT_PASSWORD: haseeb9353
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+  
+  app:
+    build: .
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+volumes:
+  mongo-data:
